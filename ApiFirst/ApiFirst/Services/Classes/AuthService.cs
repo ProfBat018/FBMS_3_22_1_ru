@@ -1,7 +1,7 @@
 ﻿using ApiFirst.Data.Contexts;
 using ApiFirst.Data.Models;
 using ApiFirst.Services.Interfaces;
-
+using Microsoft.EntityFrameworkCore;
 using static BCrypt.Net.BCrypt;
 
 namespace ApiFirst.Services.Classes;
@@ -16,8 +16,26 @@ public class AuthService : IAuthService
 
     public async Task<User> LoginUserAsync(LoginUser user)
     {
+        try
+        {
+            var foundUser = await context.Users.FirstOrDefaultAsync(u => u.Username == user.Username);
 
-        throw new NotImplementedException();
+            if (foundUser == null)
+            {
+                throw new Exception("User not found");
+            }
+
+            if (!Verify(user.Password, foundUser.Password))
+            {
+                throw new Exception("Invalid password");
+            }
+
+            return foundUser;
+        }
+        catch
+        {
+            throw;
+        }
     }
 
     public async Task<User> RegisterUserAsync(RegisterUser user)
