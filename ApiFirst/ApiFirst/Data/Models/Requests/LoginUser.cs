@@ -1,4 +1,4 @@
-﻿namespace ApiFirst.Data.Models;
+﻿namespace ApiFirst.Data.Models.Requests;
 
 public class LoginUser
 {

@@ -1,4 +1,4 @@
-﻿using ApiFirst.Data.Models;
+﻿using ApiFirst.Data.Models.Requests;
 using FluentValidation;
 
 namespace ApiFirst.Validators;

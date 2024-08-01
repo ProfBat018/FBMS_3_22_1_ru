@@ -1,14 +1,27 @@
 using ApiFirst.Data.Contexts;
+using ApiFirst.Data.Models;
+using ApiFirst.Middlewares;
 using ApiFirst.Services.Classes;
 using ApiFirst.Services.Interfaces;
 using ApiFirst.Validators;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddCors(options =>
+{
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.AllowAnyOrigin()
+        .AllowAnyMethod()
+        .AllowAnyHeader();
+    });
+});
 
 builder.Services.AddAuthentication(options =>
 {
@@ -61,23 +74,37 @@ builder.Services.AddSwaggerGen(options =>
     });
 });
 
-
-builder.Services.AddScoped<LoginUserValidator>();
-builder.Services.AddScoped<RegisterUserValidator>();
-builder.Services.AddTransient<ITokenService, TokenService>();
-builder.Services.AddTransient<IAuthService, AuthService>();
-
 builder.Services.AddDbContext<AuthContext>(options =>
 {
     options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
 });
 
+builder.Services.AddIdentityCore<User>()
+    .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider); ;
+
+builder.Services.AddScoped<IUserStore<User>, UserStore>();
+builder.Services.AddScoped<UserManager<User>>();
+
+builder.Services.AddScoped<LoginUserValidator>();
+builder.Services.AddScoped<RegisterUserValidator>();
+builder.Services.AddTransient<ITokenService, TokenService>();
+builder.Services.AddTransient<IAuthService, AuthService>();
+builder.Services.AddTransient<IAccountService, AccountService>();
+
+builder.Services.AddSingleton<IBlackListService, BlackListService>();
+builder.Services.AddSingleton<JwtSessionMiddleware>();
+builder.Services.AddSingleton<IEmailSender, EmailSender>();
+
+
 var app = builder.Build();
+
+app.UseCors();
 
 app.UseSwagger();
 app.UseSwaggerUI();
 
 app.UseHttpsRedirection();
+app.UseMiddleware<JwtSessionMiddleware>();
 
 app.UseAuthentication();
 app.UseAuthorization();
