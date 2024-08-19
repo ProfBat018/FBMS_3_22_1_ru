@@ -3,6 +3,7 @@ using ApiFirst.Data.Models;
 using ApiFirst.Data.Models.Requests;
 using ApiFirst.Exceptions;
 using ApiFirst.Services.Interfaces;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Security.Claims;
 using static BCrypt.Net.BCrypt;
@@ -21,7 +22,7 @@ public class AuthService : IAuthService
         this.blackListService = blackListService;
     }
 
-    public async Task<TokenData> LoginUserAsync(LoginUser user)
+    public async Task<AccessInfoDTO> LoginUserAsync(LoginDTO user)
     {
         try
         {
@@ -34,10 +35,10 @@ public class AuthService : IAuthService
 
             if (!Verify(user.Password, foundUser.Password))
             {
-                throw new MyAuthException(AuthErrorTypes.InvalidCredentials, "Invalid password");
+                throw new MyAuthException(AuthErrorTypes.InvalidCredentials, "Invalid credentials");
             }
 
-            var tokenData = new TokenData()
+            var tokenData = new AccessInfoDTO()
             {
                 AccessToken = await tokenService.GenerateTokenAsync(foundUser),
                 RefreshToken = await tokenService.GenerateRefreshTokenAsync(),
@@ -57,7 +58,7 @@ public class AuthService : IAuthService
         }
     }
 
-    public async Task LogOutAsync(UserTokenInfo userTokenInfo)
+    public async Task LogOutAsync(TokenDTO userTokenInfo)
     {
         if (userTokenInfo is null)
             throw new MyAuthException(AuthErrorTypes.InvalidRequest, "Invalid client request");
@@ -73,11 +74,10 @@ public class AuthService : IAuthService
         await context.SaveChangesAsync();
 
         blackListService.AddTokenToBlackList(userTokenInfo.AccessToken);
-
-        
+              
     }
 
-    public async Task<TokenData> RefreshTokenAsync(UserTokenInfo userAccessData)
+    public async Task<AccessInfoDTO> RefreshTokenAsync(TokenDTO userAccessData)
     {
         if (userAccessData is null)
             throw new MyAuthException(AuthErrorTypes.InvalidRequest, "Invalid client request");
@@ -102,7 +102,7 @@ public class AuthService : IAuthService
 
         await context.SaveChangesAsync();
 
-        return new TokenData
+        return new AccessInfoDTO
         {
             AccessToken = newAccessToken,
             RefreshToken = newRefreshToken,
@@ -110,7 +110,7 @@ public class AuthService : IAuthService
         };
     }
 
-    public async Task<User> RegisterUserAsync(RegisterUser user)
+    public async Task<User> RegisterUserAsync(RegisterDTO user)
     {
         try
         {
@@ -121,7 +121,8 @@ public class AuthService : IAuthService
                 Password = HashPassword(user.Password)
             };
 
-            await context.AddAsync(newUser);
+            await context.Users.AddAsync(newUser);
+
             await context.SaveChangesAsync();
 
             return newUser;

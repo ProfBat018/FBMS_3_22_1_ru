@@ -4,5 +4,6 @@ namespace ApiFirst.Services.Interfaces;
 
 public interface IAccountService
 {
-    public Task ResetPaswordAsync(ResetPasswordRequest resetRequest);
+    public Task ResetPaswordAsync(ResetPasswordDTO resetRequest, string token);
+    public Task ConfirmEmailAsync(string token);
 }

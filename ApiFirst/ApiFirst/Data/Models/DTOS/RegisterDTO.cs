@@ -1,6 +1,6 @@
 ﻿namespace ApiFirst.Data.Models.Requests;
 
-public class RegisterUser
+public class RegisterDTO
 {
     public string Username { get; set; }
     public string Email { get; set; }

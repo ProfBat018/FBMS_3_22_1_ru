@@ -3,7 +3,7 @@ using FluentValidation;
 
 namespace ApiFirst.Validators;
 
-public class LoginUserValidator : AbstractValidator<LoginUser>
+public class LoginUserValidator : AbstractValidator<LoginDTO>
 {
     public LoginUserValidator()
     {

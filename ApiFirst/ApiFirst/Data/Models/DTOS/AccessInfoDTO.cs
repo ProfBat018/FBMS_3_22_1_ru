@@ -1,6 +1,6 @@
 ﻿namespace ApiFirst.Data.Models.Requests;
 
-public class TokenData
+public class AccessInfoDTO
 {
     public string AccessToken { get; set; }
     public string RefreshToken { get; set; }

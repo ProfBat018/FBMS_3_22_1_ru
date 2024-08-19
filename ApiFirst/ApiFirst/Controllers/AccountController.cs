@@ -2,7 +2,6 @@
 using ApiFirst.Exceptions;
 using ApiFirst.Services.Interfaces;
 using Microsoft.AspNetCore.Authorization;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
 namespace ApiFirst.Controllers
@@ -12,19 +11,25 @@ namespace ApiFirst.Controllers
     public class AccountController : ControllerBase
     {
         private readonly IAccountService accountService;
+        private readonly ITokenService tokenService;
 
-        public AccountController(IAccountService accountService)
+        public AccountController(IAccountService accountService, ITokenService tokenService)
         {
             this.accountService = accountService;
+            this.tokenService = tokenService;
         }
 
         [Authorize]
         [HttpPost("ResetPassword")]
-        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordRequest resetRequest)
+        public async Task<IActionResult> ResetPasswordAsync([FromBody] ResetPasswordDTO resetRequest)
         {
             try
             {
-                await accountService.ResetPaswordAsync(resetRequest);
+                var token = HttpContext.Request.Headers["Authorization"];
+
+                token = token.ToString().Replace("Bearer ", "");
+
+                await accountService.ResetPaswordAsync(resetRequest, token);
                 return Ok("Recovery link sent to your email");
             }
             catch (MyAuthException ex)
@@ -33,5 +38,40 @@ namespace ApiFirst.Controllers
             }
         }
 
+
+        [Authorize]
+        [HttpPost("ConfirmEmail")]
+        public async Task<IActionResult> ConfirmEmailAsync()
+        {
+            try
+            {
+                var token = HttpContext.Request.Headers["Authorization"];
+
+                token = token.ToString().Replace("Bearer ", "");
+
+                await accountService.ConfirmEmailAsync(token);
+
+                return Ok();
+            }
+            catch
+            {
+                throw;
+            }
+        }
+
+        [HttpGet("ValidateConfirmation")]
+        public async Task<IActionResult> ValidateConfirmationAsync([FromQuery] string token, [FromQuery] string userId)
+        {
+            try
+            {
+                 await tokenService.ValidateEmailTokenAsync(token, userId);
+
+                return Ok("Email confirmed successfully");
+            }
+            catch
+            {
+                throw;
+            }
+        }
     }
 }

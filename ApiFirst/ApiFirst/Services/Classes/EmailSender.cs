@@ -23,14 +23,14 @@ public class EmailSender : IEmailSender
 
 
 
-    public async Task SendEmailAsync(string email, string subject, string message, FileInfo[] attachments = null)
+    public async Task SendEmailAsync(string email, string subject, string message, FileInfo[] attachments = null, bool isHtml = false)
     {
         var mailMessage = new MailMessage
         {
             From = new MailAddress(_configuration["Email:Username"]),
             Subject = subject,
             Body = message,
-            IsBodyHtml = false
+            IsBodyHtml = isHtml
         };
 
         mailMessage.To.Add(email);

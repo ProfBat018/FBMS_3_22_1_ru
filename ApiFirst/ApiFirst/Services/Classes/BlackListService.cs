@@ -23,7 +23,7 @@ public class BlackListService : IBlackListService
     {
         while (!_cancellationTokenSource.Token.IsCancellationRequested)
         {
-            await Task.Delay(TimeSpan.FromDays(1), _cancellationTokenSource.Token); // Delay for 30 minutes
+            await Task.Delay(TimeSpan.FromMinutes(10), _cancellationTokenSource.Token); // Delay for 30 minutes
             ClearBlacklist();
         }
     }

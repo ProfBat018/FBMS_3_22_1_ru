@@ -3,7 +3,7 @@ using System.Security.Principal;
 
 namespace ApiFirst.Data.Models;
 
-public class User 
+public class User
 {
     public Guid Id { get; set; } = Guid.NewGuid();
     public string Username { get; set; }

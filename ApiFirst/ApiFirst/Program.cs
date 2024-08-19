@@ -76,23 +76,19 @@ builder.Services.AddSwaggerGen(options =>
 
 builder.Services.AddDbContext<AuthContext>(options =>
 {
-    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"));
+    options.UseSqlServer(builder.Configuration.GetConnectionString("MacConnection"));
 });
 
-builder.Services.AddIdentityCore<User>()
-    .AddTokenProvider<DataProtectorTokenProvider<User>>(TokenOptions.DefaultProvider); ;
-
-builder.Services.AddScoped<IUserStore<User>, UserStore>();
-builder.Services.AddScoped<UserManager<User>>();
 
 builder.Services.AddScoped<LoginUserValidator>();
 builder.Services.AddScoped<RegisterUserValidator>();
+
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IAccountService, AccountService>();
 
-builder.Services.AddSingleton<IBlackListService, BlackListService>();
-builder.Services.AddSingleton<JwtSessionMiddleware>();
+builder.Services.AddScoped<IBlackListService, BlackListService>();
+builder.Services.AddScoped<JwtSessionMiddleware>();
 builder.Services.AddSingleton<IEmailSender, EmailSender>();
 
 
