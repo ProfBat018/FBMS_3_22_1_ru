@@ -1,6 +1,7 @@
 ﻿
 using Microsoft.AspNetCore.Identity.UI.Services;
-
+using System.Net.Mail;
+using System.Net;
 
 namespace ApiFirst.Services.Classes;
 
@@ -11,7 +12,7 @@ public class EmailSender : IEmailSender
     public EmailSender(IConfiguration configuration)
     {
         _configuration = configuration;
-      
+
         _smtpClient = new SmtpClient(_configuration["Email:Host"])
         {
             Port = int.Parse(_configuration["Email:Port"]),
@@ -20,29 +21,20 @@ public class EmailSender : IEmailSender
         };
     }
 
-
-
-    public async Task SendEmailAsync(string email, string subject, string message)
+    public async Task SendEmailAsync(string email, string subject, string htmlMessage)
     {
         var mailMessage = new MailMessage
         {
             From = new MailAddress(_configuration["Email:Username"]),
             Subject = subject,
-            Body = message,
-            IsBodyHtml = isHtml
+            Body = htmlMessage,
+            IsBodyHtml = true
         };
 
         mailMessage.To.Add(email);
 
-        if (attachments != null)
-        {
-            foreach (var attachment in attachments)
-            {
-                mailMessage.Attachments.Add(new Attachment(attachment.FullName));
-            }
-        }
+
 
         await _smtpClient.SendMailAsync(mailMessage);
-
     }
 }
