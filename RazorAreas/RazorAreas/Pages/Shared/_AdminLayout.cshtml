@@ -1,5 +1,5 @@
-﻿@using RazorAreas.Areas.Identity.Data.Models;
 
+@using RazorAreas.Areas.Identity.Data.Models;
 <!DOCTYPE html>
 <html lang="en">
 
@@ -14,7 +14,7 @@
 
 <body>
 <header>
-    <nav class="navbar navbar-expand-lg navbar-light bg-light border-bottom box-shadow mb-3">
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark border-bottom mb-3">
         <div class="container">
             <a class="navbar-brand" asp-area="" asp-page="/Index">RazorAreas</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
@@ -23,22 +23,35 @@
             <div class="collapse navbar-collapse" id="navbarNav">
                 <ul class="navbar-nav me-auto">
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Index">Home</a>
+                        <a class="nav-link text-light" asp-area="" asp-page="/Index">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link text-dark" asp-area="" asp-page="/Privacy">Privacy</a>
+                        <a class="nav-link text-light" asp-area="" asp-page="/Privacy">Privacy</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="" asp-page="/Admin/Index">Admin menu</a>
                     </li>
                 </ul>
                 <ul class="navbar-nav ms-auto">
-                  <partial name="_LoginPartial"/>
+                    @if (User.Identity.IsAuthenticated)
+                    {
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Logout">Log Out</a>
+                    </li>
+                    }
+                    else
+                    {
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Login">Sign In</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link text-light" asp-area="Identity" asp-page="/Account/Register">Sign up</a>
+                    </li>
+                    }
                 </ul>
             </div>
         </div>
     </nav>
-
-
-
-
 </header>
 <div class="container">
     <main role="main" class="pb-3">

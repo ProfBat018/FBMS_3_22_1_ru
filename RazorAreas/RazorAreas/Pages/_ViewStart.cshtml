@@ -1,3 +1,15 @@
-﻿@{
-    Layout = "_Layout";
+﻿@using RazorAreas.Areas.Identity.Data.Models
+@{
+    if (User.IsInRole(AppRoles.AdminAppUser))
+    {
+        Layout = "_AdminLayout";
+    }
+    else if (User.IsInRole(AppRoles.DefaultAppUser))
+    {
+        Layout = "_UserLayout";
+    }
+    else
+    {
+        Layout = "_Layout";
+    }
 }

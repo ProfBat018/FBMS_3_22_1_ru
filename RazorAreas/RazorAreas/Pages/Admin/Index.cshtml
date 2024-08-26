@@ -2,14 +2,11 @@
 
 
 @using Microsoft.AspNetCore.Identity
-@using RazorAreas.Areas.Identity.Data.DbContexts
-@using RazorAreas.Areas.Identity.Data.Models
 @inject UserManager<AppUser> userManager;
-@inject UserContext context;
+
 
 @model RazorAreas.Pages.Admin.AdminPageModel
-@{
-}
+
 
 <table class="table">
     <thead>
@@ -21,15 +18,15 @@
     </thead>
 
     <tbody>
-        @foreach (var user in context.Users.ToList())
+        @foreach (var user in userManager.Users)
         {
             <tr>
                 <td>@user.UserName</td>
                 <td>@user.Email</td>
                 <td>
-                    <a class="btn btn-primary">Изменить</a>
-                    <a class="btn btn-danger">Удалить</a>
-                    <a class="btn btn-warning">Изменить права</a>
+                    <a asp-page-handler="EditUser" asp-route-id="@user.Id" class="btn btn-primary">Изменить</a>
+                    <a asp-page-handler="DeleteUser" asp-route-id="@user.Id" class="btn btn-danger">Удалить</a>
+                    <a asp-page-handler="GrantUser" asp-route-id="@user.Id" class="btn btn-warning">Изменить права</a>
                 </td>
             </tr>
         }

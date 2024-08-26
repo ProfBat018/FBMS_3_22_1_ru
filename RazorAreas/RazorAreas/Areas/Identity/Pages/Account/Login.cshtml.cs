@@ -1,4 +1,7 @@
-﻿#nullable disable
+﻿// Licensed to the .NET Foundation under one or more agreements.
+// The .NET Foundation licenses this file to you under the MIT license.
+
+#nullable disable
 
 using System;
 using System.Collections.Generic;
@@ -12,8 +15,8 @@ using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.RazorPages;
 using Microsoft.Extensions.Logging;
-using RazorAreas.Areas.Identity.Data.Models;
 using RazorAreas.Areas.Identity.Data.DTOs;
+using RazorAreas.Areas.Identity.Data.Models;
 
 namespace RazorAreas.Areas.Identity.Pages.Account
 {
@@ -22,19 +25,22 @@ namespace RazorAreas.Areas.Identity.Pages.Account
         private readonly SignInManager<AppUser> _signInManager;
         private readonly ILogger<LoginModel> _logger;
 
-        [BindProperty]
-        public LoginInputModel Input { get; set; }
-        public IList<AuthenticationScheme> ExternalLogins { get; set; }
-        public string ReturnUrl { get; set; }
-        [TempData]
-        public string ErrorMessage { get; set; }
-
         public LoginModel(SignInManager<AppUser> signInManager, ILogger<LoginModel> logger)
         {
             _signInManager = signInManager;
             _logger = logger;
         }
 
+        [BindProperty] public LoginInputModel Input { get; set; }
+
+
+        public IList<AuthenticationScheme> ExternalLogins { get; set; }
+
+
+        public string ReturnUrl { get; set; }
+
+
+        [TempData] public string ErrorMessage { get; set; }
 
         public async Task OnGetAsync(string returnUrl = null)
         {
@@ -45,7 +51,6 @@ namespace RazorAreas.Areas.Identity.Pages.Account
 
             returnUrl ??= Url.Content("~/");
 
-            
             await HttpContext.SignOutAsync(IdentityConstants.ExternalScheme);
 
             ExternalLogins = (await _signInManager.GetExternalAuthenticationSchemesAsync()).ToList();
@@ -61,19 +66,20 @@ namespace RazorAreas.Areas.Identity.Pages.Account
 
             if (ModelState.IsValid)
             {
-                
-                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe, lockoutOnFailure: false);
-
-                
+                var result = await _signInManager.PasswordSignInAsync(Input.Email, Input.Password, Input.RememberMe,
+                    lockoutOnFailure: false);
                 if (result.Succeeded)
                 {
                     _logger.LogInformation("User logged in.");
                     return LocalRedirect(returnUrl);
                 }
+
                 if (result.RequiresTwoFactor)
                 {
-                    return RedirectToPage("./LoginWith2fa", new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
+                    return RedirectToPage("./LoginWith2fa",
+                        new { ReturnUrl = returnUrl, RememberMe = Input.RememberMe });
                 }
+
                 if (result.IsLockedOut)
                 {
                     _logger.LogWarning("User account locked out.");
@@ -85,6 +91,7 @@ namespace RazorAreas.Areas.Identity.Pages.Account
                     return Page();
                 }
             }
+
             return Page();
         }
     }

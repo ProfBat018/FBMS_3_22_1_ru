@@ -28,7 +28,7 @@ builder.Services.AddIdentity<AppUser, IdentityRole>(options => options.SignIn.Re
 
 builder.Services.AddRazorPages(ops =>
 {
-    ops.Conventions.AuthorizeFolder("/Admin", "RequireSuperAdmin");
+    ops.Conventions.AuthorizeFolder("/Admin", "RequireAdmin");
 });
 
 builder.Services.AddSingleton<IEmailSender, EmailSender>();

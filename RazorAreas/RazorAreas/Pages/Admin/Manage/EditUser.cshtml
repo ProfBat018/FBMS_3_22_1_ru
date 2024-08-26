@@ -1,0 +1,22 @@
+@page
+@model RazorAreas.Pages.Admin.Manage.EditUser
+
+
+<div class="container mt-5">
+    <h2 class="mb-4">Edit User</h2>
+    
+    <form method="post" class="needs-validation" novalidate>
+        <div class="mb-3">
+            <label asp-for="User.UserName" class="form-label"></label>
+            <input asp-for="User.UserName" name="userName" class="form-control" />
+            <span asp-validation-for="User.UserName" class="text-danger"></span>
+        </div>
+        
+        <button type="submit"  asp-route-id="@Model.User.Id" class="btn btn-primary">Save Changes</button>
+        <a asp-page="./Index" class="btn btn-secondary">Cancel</a>
+    </form>
+</div>
+
+@section Scripts {
+    <partial name="_ValidationScriptsPartial" />
+}
