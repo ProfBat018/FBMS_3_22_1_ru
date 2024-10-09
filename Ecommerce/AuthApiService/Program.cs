@@ -1,6 +1,7 @@
 using System.Text;
 using AuthApiService.Middlewares;
 using AuthData.Contexts;
+using AuthData.DTO;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Microsoft.EntityFrameworkCore;
@@ -84,9 +85,12 @@ builder.Services.AddDbContext<AuthContext>(options =>
 builder.Services.AddScoped<LoginUserValidator>();
 builder.Services.AddScoped<RegisterUserValidator>();
 
+
 builder.Services.AddTransient<ITokenService, TokenService>();
 builder.Services.AddTransient<IAuthService, AuthService>();
 builder.Services.AddTransient<IAccountService, AccountService>();
+
+builder.Services.AddTransient<IRoleService, RoleService>();
 
 builder.Services.AddScoped<IBlackListService, BlackListService>();
 builder.Services.AddScoped<JwtSessionMiddleware>();

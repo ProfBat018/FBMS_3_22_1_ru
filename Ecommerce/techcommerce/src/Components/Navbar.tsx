@@ -4,10 +4,11 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import{ faSignInAlt, faSun, faMoon, faBars, faTimes } from '@fortawesome/free-solid-svg-icons';
 import { Link, useNavigate } from 'react-router-dom';
 import { login, register } from '../Actions/AuthActions';
-import {LoginDTO, RegisterDTO} from '../../Models/AuthDTOs';
-import {CategoryDTO} from "../../Models/CategoryDTOs";
+import {CategoryDTO} from "../Models/CategoryDTOs";
+import {LoginDTO, RegisterDTO} from "../Models/AuthDTOs";
 
-const Navbar = ({ onLogin, categories }: { onLogin: () => void, categories: CategoryDTO[] }) => {
+
+const Navbar = ({ onLogin, categories }: { onLogin: (res: boolean) => void, categories: CategoryDTO[] }) => {
     const [isModalOpen, setIsModalOpen] = useState<boolean>(false);
     const [isMenuOpen, setIsMenuOpen] = useState<boolean>(false);
     const [darkTheme, setDarkTheme] = useState<boolean>(true);
@@ -55,13 +56,13 @@ const Navbar = ({ onLogin, categories }: { onLogin: () => void, categories: Cate
         res.then(response => {
             localStorage.setItem('accessToken', response.accessToken);
             localStorage.setItem('refreshToken', response.refreshToken);
-            localStorage.setItem('expireTime', response.refreshTokenExpireTime.toLocaleString());
-            onLogin();
+            onLogin(true);
             
             navigateTo('/home');
             setIsModalOpen(false);
                 
         }).catch(error => {
+            onLogin(false);
             setErrorLabel(error.response.data.error);
         });
     };
@@ -94,6 +95,7 @@ const Navbar = ({ onLogin, categories }: { onLogin: () => void, categories: Cate
         switch (modalContent) {
             case 'login':
                 return (
+                    
                     <>
                         <Dialog.Title className="text-xl font-bold mb-4">Log In</Dialog.Title>
                         <form className="space-y-4" onSubmit={handleLogin}>

@@ -5,6 +5,7 @@ import { createBrowserRouter, RouterProvider } from 'react-router-dom';
 import { QueryClient, QueryClientProvider } from 'react-query';
 import Routes from './Routes';
 
+
 // Define the type for the element you are mounting to
 const rootElement = document.getElementById('root') as HTMLElement;
 

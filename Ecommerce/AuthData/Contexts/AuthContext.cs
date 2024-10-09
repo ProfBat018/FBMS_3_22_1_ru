@@ -1,4 +1,5 @@
-﻿using AuthData.Models;
+﻿using System.Data.Common;
+using AuthData.Models;
 using Microsoft.EntityFrameworkCore;
 
 namespace AuthData.Contexts;
@@ -6,6 +7,8 @@ namespace AuthData.Contexts;
 public class AuthContext : DbContext
 {
     public DbSet<User> Users { get; set; }
+    public  DbSet<AppRole> AppRoles { get; set; }
+    public DbSet<UserRole> UserRoles { get; set; }
     
     public AuthContext()
     {
@@ -21,6 +24,8 @@ public class AuthContext : DbContext
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         var userEntity = modelBuilder.Entity<User>();
+        var appRoleEntity = modelBuilder.Entity<AppRole>();
+        var userRoleEntity = modelBuilder.Entity<UserRole>();
 
         userEntity.HasKey(u => u.Id); // primary key
 
@@ -36,6 +41,16 @@ public class AuthContext : DbContext
 
         userEntity.Property(u => u.Password)
             .IsRequired();
+
+        appRoleEntity.HasKey(a => a.RoleId);
+        
+        appRoleEntity.Property(a => a.RoleName)
+            .HasMaxLength(15)
+            .IsRequired();
+
+        appRoleEntity.HasIndex(a => a.RoleName)
+            .IsUnique();
+            
     }
 
 
