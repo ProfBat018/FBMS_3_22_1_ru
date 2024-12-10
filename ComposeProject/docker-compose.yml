@@ -1,0 +1,26 @@
+version: "3.8"
+
+networks:
+  my_bridge_network:
+    driver: bridge
+
+services:
+  frontend:
+    build:
+      context: ./Front/
+      dockerfile: Dockerfile
+    ports:
+      - "3000:80"
+    networks:
+      - my_bridge_network
+    depends_on:
+      - backend
+
+  backend:
+    build:
+      context: ./Back
+      dockerfile: Dockerfile
+    ports:
+      - "8080:8080"
+    networks:
+      - my_bridge_network
