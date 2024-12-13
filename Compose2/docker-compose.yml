@@ -1,5 +1,3 @@
-version: "3.8"
-
 networks:
   my_bridge_network:
     driver: bridge
@@ -7,7 +5,7 @@ networks:
 services:
   frontend:
     build:
-      context: ./Front 2/
+      context: ./Front/
       dockerfile: Dockerfile
     ports:
       - "3000:80"
@@ -28,19 +26,6 @@ services:
     depends_on:
       - mssql
     user: root
-  
-
-  adminbackend:
-    build:
-      context: ./AdminBack
-      dockerfile: Dockerfile
-    ports:
-      - "5050:5050"
-    network_mode: host
-    depends_on:
-      - mssql
-    user: root
-
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: mssql
@@ -54,6 +39,5 @@ services:
     volumes:
       - mssql_data:/var/opt/mssql
     user: root
-
 volumes:
   mssql_data:
