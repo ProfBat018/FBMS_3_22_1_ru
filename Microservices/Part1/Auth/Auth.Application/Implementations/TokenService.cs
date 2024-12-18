@@ -1,6 +1,4 @@
-﻿
-
-using System.IdentityModel.Tokens.Jwt;
+﻿using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
@@ -154,12 +152,5 @@ public class TokenService : ITokenService
         }
     }
 
-    public string GenerateCSRF()
-    {
-        using var rng = new RNGCryptoServiceProvider();
-
-        byte[] tokenData = new byte[32];
-        rng.GetBytes(tokenData);
-        return Convert.ToBase64String(tokenData);
-    }
+  
 }

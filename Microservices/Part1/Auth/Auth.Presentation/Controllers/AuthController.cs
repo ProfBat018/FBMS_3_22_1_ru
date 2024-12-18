@@ -3,7 +3,6 @@ using Asp.Versioning;
 using Auth.Application.DTO;
 using Auth.Application.Validators;
 using Auth.Core.Interfaces;
-using Auth.Presentation.Attributes;
 using Auth.Shared.Exceptions;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -50,13 +49,6 @@ public class AuthController : ControllerBase
 
         Response.Cookies.Append("accessToken", res.accessToken);
         Response.Cookies.Append("refreshToken", res.refreshToken);
-        Response.Cookies.Append("X-CSRF-Token", res.csrfToken, new CookieOptions()
-        {
-            HttpOnly = true,
-            Secure = true,
-            SameSite = SameSiteMode.Strict,
-            Expires = DateTime.UtcNow.AddMinutes(20)
-        });
         
         return Ok(new LoginResponse_DTO(res.userName));
     }
@@ -91,13 +83,13 @@ public class AuthController : ControllerBase
         if (newToken is null)
             return BadRequest("Invalid token");
 
-        var res = new Refresh_DTO(newToken.accessToken, newToken.refreshToken, newToken.csrfToken);
+        var res = new Refresh_DTO(newToken.accessToken, newToken.refreshToken );
         return Ok(res);
     }
 
 
     [Authorize]
-    [ValidateCsrfToken]
+  
     [HttpPost("Logout")]
     public async Task<IActionResult> LogoutAsync()
     {
