@@ -1,5 +1,7 @@
+using System.Security.Claims;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Movies.DTO;
 using Movies.Models;
 using Movies.Services.Interfaces;
 
@@ -15,7 +17,7 @@ public class MovieController : ControllerBase
     {
         _movieService = movieService;
     }
-    
+
     [HttpGet("{name}/{page=1}")]
     public async Task<IActionResult> GetMovies(string name, int page=1)
     {
@@ -27,15 +29,27 @@ public class MovieController : ControllerBase
         return Ok(ResponseModel<MovieResponseDTO>.SuccessResponse(res, "Movies retrieved successfully"));
     }
 
-    [Authorize("AppUser")]
-    [HttpGet("Save/{id}")]
-    public async Task<IActionResult> SaveMovieToCollection(int id)
+    [Authorize("AppUserOrAdmin")]
+    [HttpPost("Save")]
+    public async Task<IActionResult> SaveMovieToCollection([FromBody]MovieRequestByIdDTO requestByIdDto)
     {
-        var res = await _movieService.GetMovieById(id);
-
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var res = await _movieService.GetMovieById(requestByIdDto.id);
         if (res == null)
             throw new Exception("Failed to get movie");
 
+        await _movieService.SaveMovieToCollectionAsync(res, userId);
+        
         return Ok(ResponseModel<SearchByIdResult>.SuccessResponse(res, "Movie retrieved successfully"));
+    }
+    
+    [Authorize("AppUserOrAdmin")]
+    [HttpGet("Collection/{page=1}")]
+    public async Task<IActionResult> GetCollection(int page=1)
+    {
+        var userId = User.FindFirstValue(ClaimTypes.NameIdentifier);
+        var res = await _movieService.GetCollectionAsync(userId, page);
+
+        return Ok(ResponseModel<PaginatedModel<Movie>>.SuccessResponse(res, "Collection retrieved successfully"));
     }
 }

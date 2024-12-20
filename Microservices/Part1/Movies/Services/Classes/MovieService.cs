@@ -1,6 +1,9 @@
 using System.Text.Json;
+using AutoMapper;
+using Microsoft.EntityFrameworkCore;
 using Movies.Contexts;
 using Movies.DTO;
+using Movies.Models;
 using Movies.Services.Interfaces;
 using RestSharp;
 
@@ -10,11 +13,13 @@ public class MovieService : IMovieService
 {
     private readonly MovieContext _movieContext;
     private readonly IConfiguration _configuration;
+    private readonly IMapper _mapper;
     
-    public MovieService(MovieContext movieContext, IConfiguration configuration)
+    public MovieService(MovieContext movieContext, IConfiguration configuration, IMapper mapper)
     {
         _movieContext = movieContext;
         _configuration = configuration;
+        _mapper = mapper;
     }
     
     public async Task<MovieResponseDTO> GetMovies(string name, int page=1)
@@ -62,8 +67,9 @@ public class MovieService : IMovieService
         Dictionary<string, string> externalIdsDictionary = new();
 
         var filteredResult = externalIds.GetType().GetProperties()
-            .Where(f => f.GetValue(externalIds) != null & f.Name != "id")
+            .Where(f => f.GetValue(externalIds) != null && f.Name != "id")
             .Select(x => x.Name).ToList();
+        
         
         foreach (var item in filteredResult)
         {
@@ -73,7 +79,6 @@ public class MovieService : IMovieService
 
         foreach (var item in externalIdsDictionary)
         {
-            
             var options = new RestClientOptions($"https://api.themoviedb.org/3/find/tt0096895?external_source={item.Key}");
             var client = new RestClient(options);
             var request = new RestRequest("");
@@ -88,11 +93,30 @@ public class MovieService : IMovieService
                 await writer.FlushAsync();
                 memoryStream.Position = 0;
                 return await JsonSerializer.DeserializeAsync<SearchByIdResult>(memoryStream) ?? throw new Exception("Failed to get movie by id");
-                break;
             }
         }
         
         throw new Exception("Failed to get movie by id");
+    }
+
+    public async Task SaveMovieToCollectionAsync(SearchByIdResult movie, string username)
+    {
+        
+        var movieEntity = _mapper.Map<Movie>(movie);
+        movieEntity.Username = username;
+        
+        _movieContext.Movies.Add(movieEntity);
+
+        await _movieContext.SaveChangesAsync();
+        
+    }
+
+    public async Task<PaginatedModel<Movie>> GetCollectionAsync(string userId, int page)
+    {
+        var movies = _movieContext.Movies.Where(m => m.Username == userId).Skip((page - 1) * 10).Take(10).AsNoTracking();
+        var paginatedMovies = new PaginatedModel<Movie>(await movies.ToListAsync());
+
+        return paginatedMovies;
     }
 
     private async Task<ExternalIdResponseDTO> GetExternalIdsAsync(int id)

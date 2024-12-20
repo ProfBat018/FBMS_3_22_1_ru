@@ -10,9 +10,13 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
     public void Configure(EntityTypeBuilder<Movie> builder)
     {
         builder.ToTable("Movies");
-       
-        builder.HasKey(m => m.Id); // PK
 
+
+        builder.HasKey(m => m.Id);
+        
+        builder.Property(m => m.Username)
+            .IsRequired();
+        
         builder.Property(m => m.Title) // Column
             .HasMaxLength(255)  // Max length
             .IsRequired(); // Not null
@@ -42,5 +46,8 @@ public class MovieConfiguration : IEntityTypeConfiguration<Movie>
         
         builder.HasIndex(m => m.Title).HasDatabaseName("IX_Movies_Title");
         builder.HasIndex(m => m.Popularity).HasDatabaseName("IX_Movies_Popularity");
+        builder.HasIndex(m => m.Username)
+            .IsUnique()
+            .HasDatabaseName("IX_Movies_Username");
     }
 }

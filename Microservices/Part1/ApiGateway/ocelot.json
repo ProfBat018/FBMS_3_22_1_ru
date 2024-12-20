@@ -1,7 +1,7 @@
 {
   "Routes": [
     {
-      "DownstreamPathTemplate": "/api/v1/{everything}",
+      "DownstreamPathTemplate": "/api/v1/{everything}", 
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
         { "Host": "localhost", "Port": 5046 }
@@ -10,10 +10,10 @@
       "UpstreamHttpMethod": [ "GET", "POST" ]
     },
     {
-      "DownstreamPathTemplate": "/api/movies/{everything}",
+      "DownstreamPathTemplate": "/api/{everything}",
       "DownstreamScheme": "http",
       "DownstreamHostAndPorts": [
-        { "Host": "localhost", "Port": 5050 }
+        { "Host": "localhost", "Port": 5083 }
       ],
       "UpstreamPathTemplate": "/movies/{everything}",
       "UpstreamHttpMethod": [ "GET", "POST" ]
