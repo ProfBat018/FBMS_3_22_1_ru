@@ -16,7 +16,7 @@ namespace Movies.Migrations
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uniqueidentifier", nullable: false),
-                    Username = table.Column<string>(type: "nvarchar(max)", nullable: false),
+                    Username = table.Column<string>(type: "nvarchar(450)", nullable: false),
                     Adult = table.Column<bool>(type: "bit", nullable: false),
                     BackdropPath = table.Column<string>(type: "nvarchar(max)", nullable: false),
                     GenreIds = table.Column<string>(type: "nvarchar(max)", nullable: false),
@@ -46,6 +46,12 @@ namespace Movies.Migrations
                 name: "IX_Movies_Title",
                 table: "Movies",
                 column: "Title");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Movies_Username",
+                table: "Movies",
+                column: "Username",
+                unique: true);
         }
 
         /// <inheritdoc />

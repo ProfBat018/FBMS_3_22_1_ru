@@ -18,6 +18,7 @@ public class MovieController : ControllerBase
         _movieService = movieService;
     }
 
+    [AllowAnonymous]
     [HttpGet("{name}/{page=1}")]
     public async Task<IActionResult> GetMovies(string name, int page=1)
     {

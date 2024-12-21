@@ -12,8 +12,8 @@ using Movies.Contexts;
 namespace Movies.Migrations
 {
     [DbContext(typeof(MovieContext))]
-    [Migration("20241220160136_Second")]
-    partial class Second
+    [Migration("20241221094811_First")]
+    partial class First
     {
         /// <inheritdoc />
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
