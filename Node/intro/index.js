@@ -1,29 +1,109 @@
-// Node js first lesson
+// import {add, subtract} from './math.mjs';
+// const { add, subtract } = require("./math");
 
-// const http = require('http');
+// console.log(add(1, 2)); // 3
+// console.log(subtract(2, 1)); // 1
 
-// const server = http.createServer((req, res) => {
-//     res.end('Hello World');
+// global.foo = () => {
+//   console.log("foo");
+// };
+
+// console.log(add(1, 2)); // foo 3
+
+// const EventEmitter = require("events");
+
+// class MyEmitter extends EventEmitter {}
+
+// const myEmitter = new MyEmitter();
+
+// myEmitter.on("event", () => {
+//   console.log("an event occurred!");
+// });
+
+// myEmitter.emit("event");
+
+// console.log("Start");
+
+// const foo = (callback) => {
+//   console.log("Foo started...");
+//   callback();
+//   console.log("Foo ended...");
+// };
+
+// foo(() => {
+//   console.log("Callback");
+// });
+
+// console.log("End");
+
+// console.log("Start");
+
+// const fetchRes = fetch("https://jsonplaceholder.typicode.com/todos/1");
+
+// fetchRes
+//   .then((response) => {
+//     console.log(`Status: ${response.status}`);
+//     response.json();
+//   })
+//   .then((json) => {
+//     console.log("JSON");
+//     console.log(json);
+//   })
+//   .catch((error) => console.error(error));
+
+// console.log("End");
+
+// console.log("Start");
+
+// async function foo() {
+//   console.log("Async Foo started...");
+
+//   const fetchRes = await fetch("https://jsonplaceholder.typicode.com/todos/1");
+
+//   console.log(`Status: ${fetchRes.status}`);
+
+//   const json = await fetchRes.json();
+
+//   console.log(`JSON: ${json}`);
+
+//   console.log("Async Foo ended...");
 // }
-// );
 
-// server.listen(3000, () => {
-//     console.log('Server is running on port 3000');
-// }
-// );
-
-// CommonJs
-
-global.foo = function() {
-    console.log('foo');
-}
-const { add, subtract } = require("./math");
-console.log(add(1, 2));
-
-// global.a = 1;
-
-
-// console.log(a);
 // foo();
 
-// console.log(global);
+// console.log("End");
+
+// const EventEmitter = require("events");
+
+// var myEmitter = new EventEmitter();
+
+// myEmitter.on("elvin", () => {
+//   console.log("an event occurred!");
+// });
+
+// myEmitter.emit("elvin");
+
+
+// var name = "Elvin";
+
+// var promise = new Promise((resolve, reject) => {
+//   if (name === "Elvin") {
+//     resolve("Hello, Elvin!");
+//   } else {
+//     reject("Who are you?");
+//   }
+// });
+
+// promise.then((response) => {
+//   console.log(`Resolved: ${response}`);
+// }).catch((error) => {
+//   console.log(`Rejected: ${error}`);
+// });
+
+fetch("https://jsonplaceholder.typicode.com/todos/1")
+  .then((response) => response.json())
+  .then((json) => console.log(json))
+  .catch((error) => console.error(error));
+
+
+  
