@@ -1,5 +1,6 @@
 {
-  "name": "lesson2",
+  "type": "commonjs",
+  "name": "lesson4",
   "version": "1.0.0",
   "main": "index.js",
   "scripts": {
@@ -8,5 +9,9 @@
   "keywords": [],
   "author": "",
   "license": "ISC",
-  "description": ""
+  "description": "",
+  "dependencies": {
+    "express": "^4.21.2",
+    "mongoose": "^8.9.5"
+  }
 }

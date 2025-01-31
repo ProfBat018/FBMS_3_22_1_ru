@@ -37,6 +37,7 @@
 
 // foo();
 
+
 // ----------------------------
 
 // console.log(`${__dirname}/images/batman.png`);
@@ -50,36 +51,30 @@
 
 // const path = require("path");
 
-// console.log(path.join('C:', 'Users', 'User', 'Documents', 'index.js'));
+// console.log(path.join(__dirname, "index.js"));
 
-// console.log(path.resolve('C:', 'Users', 'User', 'Documents', 'index.js'));
+// console.log(path.resolve(__dirname, "index.js"));
 
 // console.log(path.extname(__filename));
 
+
 // ----------------------------
 
-// const fs =  require("fs");
 
-// fs.readFile(__filename, "utf8", (error, data) => {
-//   if (error) {
-//     console.error(error.message);
-//     return;
-//   }
-//   console.log(data);
-// });
+const fs = require("fs");
 
-// fs.writeFile(`${__dirname}/message.txt`, "Hello Node.js", (error) => {
-//   if (error) {
-//     console.error(error.message);
-//     return;
-//   }
-//   console.log("The file has been saved!");
-// });
-
-const { globby } = require("globby");
-
-globby(["**/*", '!**/node_modules']).then((paths) => {
-  console.log(paths);
+fs.readFile(__filename, "utf8", (error, data) => {
+  if (error) {
+    console.error(error.message);
+    return;
+  }
+  console.log(data);
 });
 
-
+fs.writeFile(`${__dirname}/message.txt`, "Hello Node.js", (error) => {
+  if (error) {
+    console.error(error.message);
+    return;
+  }
+  console.log("The file has been saved!");
+});
