@@ -16,12 +16,13 @@ const createUser = async (userData) => {
   const newUser = new User({ username, email, password: hashedPassword });
   await newUser.save(); // Обязательно сохраняем пользователя в БД
 
+  console.log(newUser.toObject());
+
   return {
-    user: plainToInstance(UserDTO, newUser.toObject(), {
-      excludeExtraneousValues: true,
-    }),
+    user: plainToInstance(UserDTO, newUser.toObject()),
   };
 };
+
 const loginUser = async (userData) => {
   const { email, password } = userData;
 

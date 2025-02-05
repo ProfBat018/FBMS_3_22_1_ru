@@ -19,7 +19,7 @@ const registerUser = async (req, res) => {
   }
 
   try {
-    const { user, accessToken, refreshToken } = await userService.createUser(
+    const { user } = await userService.createUser(
       req.body
     );
 
@@ -29,7 +29,7 @@ const registerUser = async (req, res) => {
       excludeExtraneousValues: true,
     });
 
-    res.status(201).json({ user: userDto, accessToken, refreshToken });
+    res.status(201).json({ user: userDto, refreshToken });
   } catch (err) {
     res.status(400).json({ message: err.message });
   }
