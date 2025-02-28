@@ -3,7 +3,8 @@
 - Цель изучения разных фреймворков
 - Bun и Fastify
 - Cравнение работы ASP.NET Kestrel и Node.js Express, Fastify
-- Работа с prisma 
+- MongoDb replica set и принцип работы prisma
+- Миграции в prisma
 
 ## Цель изучения разных фреймворков
 
@@ -22,15 +23,28 @@
 
 ## Fastify
 
-`Fastify` - это фрейморв для разработки сетевых приложений, он намного быстрее чем `Express`.
+`Fastify` - это фрейморк для разработки сетевых приложений, он намного быстрее чем `Express`.
 
 Скажу сразу про главное. Сериализация и в целом использовние `middleware`. В `Express` для того чтобы мы могли возращать `JSON` нам нужно было использовать `middleware` `body-parser`. В `Fastify` это уже встроено. Так же нам не нужен `class-transformer`, `class-validator`. Все это уже встроено в `Fastify`.
 
 Парсинг `Json` асинхронный. В `Express` он синхронный.
 
+Чтобы создать `Fastify` проект нам надо выполнить следующую команду:
+
+```bash
+bun create fastify
+```
+
+Для запуска проекта:
+
+```bash
+
+bun run fastify или bun index
+```
+
 ## Cравнение работы ASP.NET Kestrel и Node.js Express, Fastify
 
-1. Как работает Kestrel в ASP.NET ?
+1. Как работает Kestrel в ASP.NET?
 
 Kestrel — это высокопроизводительный, асинхронный, многопоточный HTTP-сервер, который используется в ASP.NET Core. Он написан на C++ и C#, построен на libuv (как Node.js раньше) и Sockets API.
 
@@ -55,40 +69,3 @@ Fastify и Express — это оба HTTP-фреймворки для Node.js, �
 ✅ Предварительная компиляция схем — меньше затрат на парсинг.
 
 ✅ Меньше middleware — быстрее проходит pipeline запроса.
-
-## Работа с prisma
-
-`Prisma` - это `ORM`. Мы будем использовать `MongoDb`. 
-
-Для начала надо создать файл `schrma.prisma` и прописать следующий код:
-
-```prisma
-generator client {
-  provider = "prisma-client-js"
-  engineType = "library"
-}
-
-datasource db {
-  provider = "mongodb"
-  url      = env("DATABASE_URL")
-}
-
-model User {
-  id        String   @id @default(auto()) @map("_id") @db.ObjectId
-  email     String   @unique
-  password  String
-  name      String
-  confirmed Boolean  @default(false)
-  createdAt DateTime @default(now())
-  updatedAt DateTime @updatedAt
-}
-``` 
-
-Далее надо подтвердить конфигурацию. 
-
-```bash
-
-prisma generate
-```
-
-

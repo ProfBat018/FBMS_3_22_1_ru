@@ -2,8 +2,7 @@ import { z } from "zod";
 
 export const RegisterDTO = z
   .object({
-    name: z
-      .string()
+    name: z.string()
       .min(2)
       .refine(
         (data) => /^[a-zA-Z]+$/.test(data ?? ""),
@@ -30,3 +29,4 @@ export const LoginDTO = z.object({
 });
 
 export type RegisterDTOType = z.infer<typeof RegisterDTO>;
+export type LoginDTOType = z.infer<typeof LoginDTO>;

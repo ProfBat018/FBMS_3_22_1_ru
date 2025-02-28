@@ -1,7 +1,10 @@
 import bcrypt from "bcrypt";
 import jwt from "jsonwebtoken";
 import { PrismaClient } from "@prisma/client";
-import type { RegisterDTOType } from "../dtos/authDTOs";
+import type { RegisterDTOType, LoginDTOType } from "../dtos/authDTOs";
+import { config } from "dotenv";
+
+config();
 
 const prisma = new PrismaClient();
 
@@ -25,8 +28,33 @@ export const authService = {
     });
 
     const confirmToken = jwt.sign({ userId: user.id }, "secret", {
-      expiresIn: "10m",
+      expiresIn: "1d",
     });
     return { status: 201, body: { message: "User registered", confirmToken } };
   },
+
+  async login(data:LoginDTOType) {
+    const { email, password } = data;
+
+    const user = await prisma.user.findUnique({ where: { email } });
+    if (!user) {
+      return { status: 400, body: { error: "Invalid credentials" } };
+    }
+
+    const valid = await bcrypt.compare(password, user.password);
+    if (!valid) {
+      return { status: 400, body: { error: "Invalid credentials" } };
+    }
+
+    var secret = process.env.JWT_SECRET;
+
+    if (!secret) {
+      return { status: 500, body: { error: "Internal server error" } };
+    }
+
+    const token = jwt.sign({ userId: user.id }, secret, {
+      expiresIn: "10m",
+    });
+    return { status: 200, body: { token } };
+  }
 };
